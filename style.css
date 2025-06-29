@@ -1,0 +1,41 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 50px;
+}
+
+button, input[type="file"] {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 12px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover, input[type="file"]:hover {
+  background-color: black;
+  color: white;
+}
+
+#data-table {
+  margin: 20px auto;
+  border-collapse: collapse;
+  width: 80%;
+  max-width: 900px;
+}
+
+#data-table th, #data-table td {
+  border: 1px solid white;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+#data-table th {
+  background-color: #333;
+}

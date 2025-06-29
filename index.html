@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CSV Upload</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>Upload Your CSV File</h1>
+
+  <input type="file" id="csvFile" accept=".csv" />
+  <button id="showBtn" style="display:none;">Show CSV Data</button>
+
+  <div id="tableContainer"></div>
+
+  <script>
+    let uploadedData = null;
+
+    document.getElementById('csvFile').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+        alert('Please upload a valid CSV file!');
+        event.target.value = '';
+        return;
+      }
+
+      // Prepare form data to send to backend
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Send file to backend
+      const response = await fetch('/upload_csv', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        uploadedData = await response.json();
+        document.getElementById('showBtn').style.display = 'inline-block';
+      } else {
+        alert('Failed to upload and process CSV.');
+      }
+    });
+
+    document.getElementById('showBtn').addEventListener('click', () => {
+      if (!uploadedData) return;
+
+      const container = document.getElementById('tableContainer');
+      container.innerHTML = '';
+
+      const table = document.createElement('table');
+      table.id = 'data-table';
+
+      // Add headers
+      const headerRow = document.createElement('tr');
+      uploadedData.columns.forEach(col => {
+        const th = document.createElement('th');
+        th.textContent = col;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+
+      // Add rows
+      uploadedData.rows.forEach(row => {
+        const tr = document.createElement('tr');
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        table.appendChild(tr);
+      });
+
+      container.appendChild(table);
+    });
+  </script>
+
+</body>
+</html>
